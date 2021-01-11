@@ -30,8 +30,6 @@ dependencies {
 //    liquibaseRuntime group: 'org.liquibase', name: 'liquibase-groovy-dsl', version: '3.0.0'
 //    liquibaseRuntime group: 'javax.xml.bind', name: 'jaxb-api', version: '2.3.1'
 
-    implementation (group: 'org.springframework', name: 'spring-context', version: '5.3.2') {
-        exclude group: 'org.springframework', module: 'spring-aop'
-    }
+    implementation group: 'org.springframework', name: 'spring-context', version: '5.3.2'
     implementation group: 'org.springframework', name: 'spring-jdbc', version: '5.3.2'
 }

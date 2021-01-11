@@ -10,6 +10,9 @@ import org.springframework.context.annotation.*;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.jdbc.support.JdbcTransactionManager;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -17,12 +20,19 @@ import javax.sql.DataSource;
 
 @Configuration
 @EnableWebMvc
+@EnableTransactionManagement
 @ComponentScan(basePackages = "com.epam.esm")
 @PropertySource("classpath:database.properties")
 public class WebAppConfig implements WebMvcConfigurer {
 
     @Autowired
     private Environment environment;
+
+    @Bean
+    public PlatformTransactionManager platformTransactionManager() {
+        JdbcTransactionManager jdbcTransactionManager = new JdbcTransactionManager(hikariDataSource());
+        return jdbcTransactionManager;
+    }
 
     @Bean
     public JdbcTemplate jdbcTemplate() {
@@ -41,18 +51,20 @@ public class WebAppConfig implements WebMvcConfigurer {
     }
 
     @Bean
-    GiftCertificateConverter giftCertificateConverter() {
+    public GiftCertificateConverter giftCertificateConverter() {
         return new GiftCertificateConverter();
     }
 
-    private HikariDataSource hikariDataSource() {
+    @Bean
+    public DataSource hikariDataSource() {
         HikariConfig hikariConfig = new HikariConfig();
         hikariConfig.setDataSource(dataSource());
         HikariDataSource hikariDataSource = new HikariDataSource(hikariConfig);
         return hikariDataSource;
     }
 
-    private DataSource dataSource() {
+    @Bean
+    public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName(environment.getRequiredProperty("jdbc.driver"));
         dataSource.setUrl(environment.getRequiredProperty("jdbc.url"));
