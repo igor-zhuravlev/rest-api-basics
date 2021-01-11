@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="1" author="igor">
+        <sql>
+            CREATE TABLE tag (
+                    id SERIAL NOT NULL,
+                    name VARCHAR(32) NOT NULL,
+                UNIQUE(name),
+                PRIMARY KEY (id)
+            );
+        </sql>
+    </changeSet>
+
+    <changeSet id="2" author="igor">
+        <sql>
+            CREATE TABLE gift_certificate (
+                    id SERIAL NOT NULL,
+                    name VARCHAR(32) NOT NULL,
+                    description VARCHAR(64) NOT NULL,
+                    price DECIMAL(12,2) NOT NULL,
+                    duration INT NOT NULL,
+                    create_date TIMESTAMP NOT NULL,
+                    last_update_date TIMESTAMP NULL,
+                UNIQUE(name),
+                PRIMARY KEY (id)
+            );
+        </sql>
+    </changeSet>
+
+    <changeSet id="3" author="igor">
+        <sql>
+            CREATE TABLE gift_certificate_tag (
+                    gift_certificate_id INT NOT NULL,
+                    tag_id INT NOT NULL,
+                CONSTRAINT fk_gift_certificate_tag_id FOREIGN KEY (gift_certificate_id) REFERENCES gift_certificate (id) ON DELETE CASCADE,
+                CONSTRAINT fk_tag_gift_certificate_id FOREIGN KEY (tag_id) REFERENCES tag (id),
+                PRIMARY KEY (gift_certificate_id, tag_id)
+            );
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>

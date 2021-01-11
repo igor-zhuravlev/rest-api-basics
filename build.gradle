@@ -1,0 +1,54 @@
+plugins {
+    id 'base'
+}
+
+def prodProfiles = 'prod'
+def devProfiles = 'dev'
+def testProfiles = 'test'
+def propertyDrivenProfiles
+
+if (project.hasProperty('prod')) {
+    propertyDrivenProfiles = prodProfiles
+    apply from: rootProject.file('profile-prod.gradle')
+} else if (project.hasProperty('dev')) {
+    propertyDrivenProfiles = devProfiles
+    apply from: rootProject.file('profile-dev.gradle')
+} else if (project.hasProperty('test')) {
+    propertyDrivenProfiles = testProfiles
+    apply from: rootProject.file('profile-test.gradle')
+} else {
+    propertyDrivenProfiles = devProfiles
+    apply from: rootProject.file('profile-dev.gradle')
+}
+println 'Using profile: "' + propertyDrivenProfiles + '" for ' + project.getName()
+
+subprojects {
+    apply plugin: 'java-library'
+//    apply plugin: 'java'
+//    apply plugin: 'idea'
+
+    sourceCompatibility = 11
+    targetCompatibility = 11
+
+    repositories {
+        jcenter()
+        mavenCentral()
+    }
+
+    dependencies {
+//        implementation 'com.google.guava:guava:29.0-jre'
+        implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.14.0'
+
+        testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
+        testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+        testImplementation group: 'org.mockito', name: 'mockito-core', version: '3.6.28'
+    }
+
+    tasks.named('test') {
+        useJUnitPlatform()
+    }
+}
+
+//tasks.named('wrapper') {
+//    gradle.gradleVersion = '6.7.1'
+//}
