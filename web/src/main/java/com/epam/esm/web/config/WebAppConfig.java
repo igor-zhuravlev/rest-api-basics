@@ -13,17 +13,13 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.jdbc.support.JdbcTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.sql.DataSource;
 
 @Configuration
-@EnableWebMvc
 @EnableTransactionManagement
-@ComponentScan(basePackages = "com.epam.esm")
 @PropertySource("classpath:database.properties")
-public class WebAppConfig implements WebMvcConfigurer {
+public class WebAppConfig {
 
     @Autowired
     private Environment environment;
@@ -56,7 +52,7 @@ public class WebAppConfig implements WebMvcConfigurer {
     }
 
     @Bean
-    public DataSource hikariDataSource() {
+    public HikariDataSource hikariDataSource() {
         HikariConfig hikariConfig = new HikariConfig();
         hikariConfig.setDataSource(dataSource());
         HikariDataSource hikariDataSource = new HikariDataSource(hikariConfig);

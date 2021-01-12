@@ -1,5 +1,6 @@
 package com.epam.esm.service.impl;
 
+import com.epam.esm.constant.ServiceError;
 import com.epam.esm.dto.GiftCertificateDto;
 import com.epam.esm.converter.Converter;
 import com.epam.esm.entity.GiftCertificate;
@@ -46,6 +47,11 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     public GiftCertificateDto findByName(String name) throws ServiceException {
         try {
             GiftCertificate giftCertificate = giftCertificateRepository.findByName(name);
+
+            if (giftCertificate == null) {
+                throw new GiftCertificateNotFoundException(ServiceError.GIFT_CERTIFICATE_NOT_FOUNT.getCode());
+            }
+
             return giftCertificateConverter.entityToDto(giftCertificate);
         } catch (RepositoryException e) {
             throw new ServiceException(e);
@@ -91,6 +97,7 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
     public GiftCertificateDto updateByName(String name, GiftCertificateDto giftCertificateDto) throws ServiceException {
         try {
             GiftCertificate giftCertificate = giftCertificateRepository.findByName(name);
+
             if (giftCertificate == null) {
                 throw new GiftCertificateNotFoundException("Gift Certificate not found");
             }

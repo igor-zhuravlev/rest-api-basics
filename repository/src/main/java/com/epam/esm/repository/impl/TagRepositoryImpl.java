@@ -3,7 +3,6 @@ package com.epam.esm.repository.impl;
 import com.epam.esm.repository.TagRepository;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.repository.exception.RepositoryException;
-import com.epam.esm.repository.impl.mapper.GiftCertificateMapper;
 import com.epam.esm.repository.impl.mapper.TagMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

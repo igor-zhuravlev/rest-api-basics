@@ -1,5 +1,6 @@
 package com.epam.esm.service.impl;
 
+import com.epam.esm.constant.ServiceError;
 import com.epam.esm.converter.Converter;
 import com.epam.esm.entity.Tag;
 import com.epam.esm.repository.TagRepository;
@@ -7,6 +8,7 @@ import com.epam.esm.repository.exception.RepositoryException;
 import com.epam.esm.service.TagService;
 import com.epam.esm.dto.TagDto;
 import com.epam.esm.service.exception.ServiceException;
+import com.epam.esm.service.exception.TagNotFoundException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +39,9 @@ public class TagServiceImpl implements TagService {
     public TagDto findByName(String name) throws ServiceException {
         try {
             Tag tag = tagRepository.findByName(name);
+            if (tag == null) {
+                throw new TagNotFoundException(ServiceError.TAG_NOT_FOUND.getCode());
+            }
             return tagConverter.entityToDto(tag);
         } catch (RepositoryException e) {
             throw new ServiceException(e);
