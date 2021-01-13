@@ -6,9 +6,12 @@ import com.epam.esm.service.exception.ServiceException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 public class GiftCertificateController {
@@ -16,6 +19,25 @@ public class GiftCertificateController {
 
     @Autowired
     private GiftCertificateService giftCertificateService;
+
+    private Map<String, String[]> multiValueMapToMap(MultiValueMap<String, String> requestParams) {
+        return requestParams.entrySet().stream()
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        e -> e.getValue().toArray(String[]::new)
+                ));
+    }
+
+    @GetMapping("/gifts-tags")
+    public List<GiftCertificateDto> findAllGiftCertificatesWithTags(@RequestParam(required = false) MultiValueMap<String, String> requestParams) {
+        try {
+            return giftCertificateService.findAllWithTags(multiValueMapToMap(requestParams));
+        } catch (ServiceException e) {
+            logger.error(e);
+            throw e;
+        }
+    }
+
 
     @GetMapping("/gifts")
     public List<GiftCertificateDto> findAllGiftCertificates() {

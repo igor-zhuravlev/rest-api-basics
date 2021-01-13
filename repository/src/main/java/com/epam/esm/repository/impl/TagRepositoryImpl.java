@@ -25,8 +25,8 @@ public class TagRepositoryImpl implements TagRepository {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    private static final String FIND_ALL_QUERY = "SELECT id, name FROM tag";
-    private static final String FIND_BY_NAME_QUERY = "SELECT id, name FROM tag WHERE name = ?";
+    private static final String FIND_ALL_QUERY = "SELECT id t_id, name t_name FROM tag";
+    private static final String FIND_BY_NAME_QUERY = "SELECT id t_id, name t_name FROM tag WHERE name = ?";
     private static final String SAVE_QUERY = "INSERT INTO tag (name) VALUES (?)";
     private static final String DELETE_BY_NAME_QUERY = "DELETE FROM tag WHERE name = ?";
 

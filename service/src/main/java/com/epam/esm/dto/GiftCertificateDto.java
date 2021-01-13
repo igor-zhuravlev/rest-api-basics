@@ -11,7 +11,6 @@ import java.util.Set;
 public class GiftCertificateDto implements Serializable {
     private static final long serialVersionUID = 1144649892569462913L;
 
-    private Integer id;
     private String name;
     private String description;
     private BigDecimal price;
@@ -25,14 +24,6 @@ public class GiftCertificateDto implements Serializable {
     private Date lastUpdateDate;
 
     private Set<TagDto> tags;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     public String getName() {
         return name;
@@ -95,8 +86,7 @@ public class GiftCertificateDto implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         GiftCertificateDto that = (GiftCertificateDto) o;
-        return Objects.equals(id, that.id) &&
-                Objects.equals(name, that.name) &&
+        return Objects.equals(name, that.name) &&
                 Objects.equals(description, that.description) &&
                 Objects.equals(price, that.price) &&
                 Objects.equals(duration, that.duration) &&
@@ -106,14 +96,13 @@ public class GiftCertificateDto implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, description, price, duration, createDate, lastUpdateDate);
+        return Objects.hash(name, description, price, duration, createDate);
     }
 
     @Override
     public String toString() {
         return "GiftCertificateDto{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
+                "name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", price=" + price +
                 ", duration=" + duration +

@@ -8,8 +8,8 @@ import java.sql.SQLException;
 
 public class GiftCertificateMapper implements RowMapper<GiftCertificate> {
 
-    public static final String ID = "id";
-    public static final String NAME = "name";
+    public static final String ID = "gc_id";
+    public static final String NAME = "gc_name";
     public static final String DESCRIPTION = "description";
     public static final String PRICE = "price";
     public static final String DURATION = "duration";
