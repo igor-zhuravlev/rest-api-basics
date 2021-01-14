@@ -26,6 +26,7 @@ public class TagRepositoryImpl implements TagRepository {
     private JdbcTemplate jdbcTemplate;
 
     private static final String FIND_ALL_QUERY = "SELECT id t_id, name t_name FROM tag";
+    private static final String FIND_BY_ID_QUERY = "SELECT id t_id, name t_name FROM tag WHERE id = ?";
     private static final String FIND_BY_NAME_QUERY = "SELECT id t_id, name t_name FROM tag WHERE name = ?";
     private static final String SAVE_QUERY = "INSERT INTO tag (name) VALUES (?)";
     private static final String DELETE_BY_NAME_QUERY = "DELETE FROM tag WHERE name = ?";
@@ -40,9 +41,19 @@ public class TagRepositoryImpl implements TagRepository {
     }
 
     @Override
+    public Tag findById(Integer id) throws RepositoryException {
+        try {
+            return jdbcTemplate.queryForObject(FIND_BY_ID_QUERY, new TagMapper(), id);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        } catch (DataAccessException e) {
+            throw new RepositoryException(e);
+        }
+    }
+
+    @Override
     public Tag findByName(String name) throws RepositoryException {
         try {
-            // TODO: 10-Jan-21 alter as prepare statement
             return jdbcTemplate.queryForObject(FIND_BY_NAME_QUERY, new TagMapper(), name);
         } catch (EmptyResultDataAccessException e) {
             return null;
@@ -64,7 +75,7 @@ public class TagRepositoryImpl implements TagRepository {
             jdbcTemplate.update(preparedStatementCreator, keyHolder);
 
             // TODO: 11-Jan-21 keys as null exception
-            tag.setId((Integer) keyHolder.getKeys().get(TagMapper.ID));
+            tag.setId((Integer) keyHolder.getKeys().get(TagMapper.SECONDARY_ID));
 
             return tag;
         } catch (DataAccessException e) {

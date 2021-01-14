@@ -67,6 +67,9 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
 
     private List<GiftCertificateDto> findAllWithTagsByOrder(Map<String, String[]> params, Sort sort) throws ServiceException {
         try {
+
+            // TODO: 14-Jan-21 validate sort, params
+
             if (ParamsUtil.hasParams(ParamsUtil.TAG_PARAM, params) && ParamsUtil.hasParams(ParamsUtil.PART_PARAM, params)) {
                 Set<GiftCertificate> giftCertificateSet =
                         giftCertificateRepository.findAllByTagNameAndPartOfNameOrDescriptionByOrder(ParamsUtil.getTagParam(params), ParamsUtil.getPartParam(params), sort);
@@ -129,9 +132,8 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
         try {
             GiftCertificate giftCertificate = giftCertificateConverter.dtoToEntity(giftCertificateDto);
 
-            Set<Tag> tags = giftCertificate.getTags();
-            if (tags != null) {
-                tags = tags.stream()
+            if (giftCertificate.getTags() != null) {
+                Set<Tag> tags = giftCertificate.getTags().stream()
                         .map(tag -> {
                             Tag t = tagRepository.findByName(tag.getName());
                             return t == null ? tagRepository.save(tag) : t;
@@ -157,24 +159,22 @@ public class GiftCertificateServiceImpl implements GiftCertificateService {
                 throw new GiftCertificateNotFoundException("Gift Certificate not found");
             }
 
+            final Integer id = giftCertificate.getId();
             giftCertificate = giftCertificateConverter.dtoToEntity(giftCertificateDto);
 
-            Set<Tag> tags = new HashSet<>();
             Set<Tag> newTags = new HashSet<>();
             if (giftCertificate.getTags() != null) {
-                for (Tag tag : giftCertificate.getTags()) {
-                    Tag t = tagRepository.findByName(tag.getName());
-                    if (t == null) {
-                        t = tagRepository.save(tag);
-                        newTags.add(t);
-                    }
-                    tags.add(t);
-                }
+                newTags = giftCertificate.getTags().stream()
+                        .filter(tag -> tagRepository.findByName(tag.getName()) == null)
+                        .map(tag -> tagRepository.save(tag))
+                        .collect(Collectors.toSet());
                 giftCertificate.setTags(newTags);
             }
 
-            giftCertificate = giftCertificateRepository.updateByName(name, giftCertificate);
-            giftCertificate.setTags(tags);
+            giftCertificateRepository.updateById(id, giftCertificate);
+
+            giftCertificate = giftCertificateRepository.findById(id);
+            giftCertificate.setTags(newTags);
 
             return giftCertificateConverter.entityToDto(giftCertificate);
         } catch (RepositoryException e) {
