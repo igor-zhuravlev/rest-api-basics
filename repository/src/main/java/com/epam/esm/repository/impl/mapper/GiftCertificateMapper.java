@@ -5,6 +5,8 @@ import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 public class GiftCertificateMapper implements RowMapper<GiftCertificate> {
 
@@ -22,13 +24,17 @@ public class GiftCertificateMapper implements RowMapper<GiftCertificate> {
     @Override
     public GiftCertificate mapRow(ResultSet rs, int rowNum) throws SQLException {
         GiftCertificate giftCertificate = new GiftCertificate();
-        giftCertificate.setId(rs.getInt(ID));
+        giftCertificate.setId(rs.getLong(ID));
         giftCertificate.setName(rs.getString(NAME));
         giftCertificate.setDescription(rs.getString(DESCRIPTION));
         giftCertificate.setPrice(rs.getBigDecimal(PRICE));
         giftCertificate.setDuration(rs.getInt(DURATION));
-        giftCertificate.setCreateDate(rs.getTimestamp(CREATE_DATE));
-        giftCertificate.setLastUpdateDate(rs.getTimestamp(LAST_UPDATE_DATE));
+        giftCertificate.setCreateDate(toLocalDateTime(rs.getTimestamp(CREATE_DATE)));
+        giftCertificate.setLastUpdateDate(toLocalDateTime(rs.getTimestamp(LAST_UPDATE_DATE)));
         return giftCertificate;
+    }
+
+    private LocalDateTime toLocalDateTime(Timestamp timestamp) {
+        return timestamp != null ? timestamp.toLocalDateTime() : null;
     }
 }

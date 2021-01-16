@@ -4,24 +4,29 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Set;
 
 public class GiftCertificateDto implements Serializable {
     private static final long serialVersionUID = 1144649892569462913L;
 
+    private static final String DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS";
+
     private String name;
     private String description;
     private BigDecimal price;
     private Integer duration;
-    // TODO: 10-Jan-21 see json formats
-//    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-//    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
-    @JsonFormat(shape = JsonFormat.Shape.STRING)
-    private Date createDate;
-    @JsonFormat(shape = JsonFormat.Shape.STRING)
-    private Date lastUpdateDate;
+    @JsonFormat(pattern = DATE_TIME_FORMAT)
+    private LocalDateTime createDate;
+    @JsonFormat(pattern = DATE_TIME_FORMAT)
+    private LocalDateTime lastUpdateDate;
+
+    public GiftCertificateDto() {}
+
+    public GiftCertificateDto(String name) {
+        this.name = name;
+    }
 
     private Set<TagDto> tags;
 
@@ -57,19 +62,19 @@ public class GiftCertificateDto implements Serializable {
         this.duration = duration;
     }
 
-    public Date getCreateDate() {
+    public LocalDateTime getCreateDate() {
         return createDate;
     }
 
-    public void setCreateDate(Date createDate) {
+    public void setCreateDate(LocalDateTime createDate) {
         this.createDate = createDate;
     }
 
-    public Date getLastUpdateDate() {
+    public LocalDateTime getLastUpdateDate() {
         return lastUpdateDate;
     }
 
-    public void setLastUpdateDate(Date lastUpdateDate) {
+    public void setLastUpdateDate(LocalDateTime lastUpdateDate) {
         this.lastUpdateDate = lastUpdateDate;
     }
 

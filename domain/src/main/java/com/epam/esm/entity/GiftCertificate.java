@@ -2,28 +2,34 @@ package com.epam.esm.entity;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Set;
 
 public class GiftCertificate implements Serializable {
     private static final long serialVersionUID = 7468316931994434280L;
 
-    private Integer id;
+    private Long id;
     private String name;
     private String description;
     private BigDecimal price;
     private Integer duration;
-    private Date createDate;
-    private Date lastUpdateDate;
+    private LocalDateTime createDate;
+    private LocalDateTime lastUpdateDate;
 
     private Set<Tag> tags;
 
-    public Integer getId() {
+    public GiftCertificate() {}
+
+    public GiftCertificate(String name) {
+        this.name = name;
+    }
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -59,19 +65,19 @@ public class GiftCertificate implements Serializable {
         this.duration = duration;
     }
 
-    public Date getCreateDate() {
+    public LocalDateTime getCreateDate() {
         return createDate;
     }
 
-    public void setCreateDate(Date createDate) {
+    public void setCreateDate(LocalDateTime createDate) {
         this.createDate = createDate;
     }
 
-    public Date getLastUpdateDate() {
+    public LocalDateTime getLastUpdateDate() {
         return lastUpdateDate;
     }
 
-    public void setLastUpdateDate(Date lastUpdateDate) {
+    public void setLastUpdateDate(LocalDateTime lastUpdateDate) {
         this.lastUpdateDate = lastUpdateDate;
     }
 

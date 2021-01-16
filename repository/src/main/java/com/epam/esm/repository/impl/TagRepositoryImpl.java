@@ -41,7 +41,7 @@ public class TagRepositoryImpl implements TagRepository {
     }
 
     @Override
-    public Tag findById(Integer id) throws RepositoryException {
+    public Tag findById(Long id) throws RepositoryException {
         try {
             return jdbcTemplate.queryForObject(FIND_BY_ID_QUERY, new TagMapper(), id);
         } catch (EmptyResultDataAccessException e) {
@@ -75,7 +75,7 @@ public class TagRepositoryImpl implements TagRepository {
             jdbcTemplate.update(preparedStatementCreator, keyHolder);
 
             // TODO: 11-Jan-21 keys as null exception
-            tag.setId((Integer) keyHolder.getKeys().get(TagMapper.SECONDARY_ID));
+            tag.setId((Long) keyHolder.getKeys().get(TagMapper.SECONDARY_ID));
 
             return tag;
         } catch (DataAccessException e) {
@@ -84,14 +84,14 @@ public class TagRepositoryImpl implements TagRepository {
     }
 
     @Override
-    public void deleteByName(String name) throws RepositoryException {
+    public Long deleteByName(String name) throws RepositoryException {
         try {
             PreparedStatementCreator preparedStatementCreator = con -> {
                 PreparedStatement preparedStatement = con.prepareStatement(DELETE_BY_NAME_QUERY);
                 preparedStatement.setString(1, name);
                 return preparedStatement;
             };
-            jdbcTemplate.update(preparedStatementCreator);
+            return (long) jdbcTemplate.update(preparedStatementCreator);
         } catch (DataAccessException e) {
             throw new RepositoryException(e);
         }

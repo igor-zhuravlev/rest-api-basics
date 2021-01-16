@@ -24,11 +24,17 @@ println 'Using profile: "' + propertyDrivenProfiles + '" for ' + project.getName
 
 subprojects {
     apply plugin: 'java-library'
-//    apply plugin: 'java'
-//    apply plugin: 'idea'
 
     sourceCompatibility = 11
     targetCompatibility = 11
+
+    ext {
+        springVersion = '5.3.3'
+    }
+
+    java {
+        withJavadocJar()
+    }
 
     repositories {
         jcenter()
@@ -36,19 +42,21 @@ subprojects {
     }
 
     dependencies {
-//        implementation 'com.google.guava:guava:29.0-jre'
         implementation group: 'org.apache.logging.log4j', name: 'log4j-core', version: '2.14.0'
 
         testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
         testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
-        testImplementation group: 'org.mockito', name: 'mockito-core', version: '3.6.28'
+        testImplementation group: 'org.mockito', name: 'mockito-core', version: '3.7.0'
+        testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '3.7.0'
     }
 
     tasks.named('test') {
         useJUnitPlatform()
     }
-}
 
-//tasks.named('wrapper') {
-//    gradle.gradleVersion = '6.7.1'
-//}
+    tasks.named('jar') {
+        manifest {
+            attributes('Implementation-Title': project.name, 'Implementation-Version': project.version)
+        }
+    }
+}

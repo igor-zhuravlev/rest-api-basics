@@ -1,4 +1,6 @@
-package com.epam.esm.service.exception;
+package com.epam.esm.service.exception.tag;
+
+import com.epam.esm.service.exception.ServiceException;
 
 public class TagNotFoundException extends ServiceException {
     private static final long serialVersionUID = -4005925979810145350L;

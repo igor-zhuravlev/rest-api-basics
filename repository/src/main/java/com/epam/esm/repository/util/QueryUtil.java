@@ -23,7 +23,7 @@ public final class QueryUtil {
         return query + orderPostfix;
     }
 
-    public static String anyMathLikePattern(String value) {
+    public static String anyMatchLikePattern(String value) {
         return LIKE_PERCENT_SIGN + value + LIKE_PERCENT_SIGN;
     }
 }

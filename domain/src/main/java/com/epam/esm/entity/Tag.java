@@ -6,14 +6,20 @@ import java.util.Objects;
 public class Tag implements Serializable {
     private static final long serialVersionUID = -7664123249924815397L;
 
-    private Integer id;
+    private Long id;
     private String name;
 
-    public Integer getId() {
+    public Tag() {}
+
+    public Tag(String name) {
+        this.name = name;
+    }
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
