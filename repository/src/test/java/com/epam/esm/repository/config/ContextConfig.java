@@ -1,15 +1,18 @@
-package com.epam.esm.web.config;
+package com.epam.esm.repository.config;
 
-import com.epam.esm.converter.impl.GiftCertificateConverter;
-import com.epam.esm.converter.impl.TagConverter;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import org.springframework.jdbc.datasource.init.DataSourceInitializer;
+import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
 import org.springframework.jdbc.support.JdbcTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -19,8 +22,8 @@ import javax.sql.DataSource;
 @Configuration
 @EnableTransactionManagement
 @PropertySource("classpath:database.properties")
-@PropertySource("classpath:application.properties")
-public class WebAppConfig {
+@ComponentScan("com.epam.esm.repository")
+public class ContextConfig {
 
     @Autowired
     private Environment environment;
@@ -38,21 +41,6 @@ public class WebAppConfig {
     }
 
     @Bean
-    public ModelMapper modelMapper() {
-        return new ModelMapper();
-    }
-
-    @Bean
-    public TagConverter tagConverter() {
-        return new TagConverter();
-    }
-
-    @Bean
-    public GiftCertificateConverter giftCertificateConverter() {
-        return new GiftCertificateConverter();
-    }
-
-    @Bean
     public HikariDataSource hikariDataSource() {
         HikariConfig hikariConfig = new HikariConfig();
         hikariConfig.setDataSource(dataSource());
@@ -65,9 +53,20 @@ public class WebAppConfig {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName(environment.getRequiredProperty("jdbc.driver"));
         dataSource.setUrl(environment.getRequiredProperty("jdbc.url"));
-        dataSource.setSchema(environment.getRequiredProperty("jdbc.schema"));
         dataSource.setUsername(environment.getRequiredProperty("jdbc.username"));
         dataSource.setPassword(environment.getRequiredProperty("jdbc.password"));
         return dataSource;
+    }
+
+    @Bean
+    public DataSourceInitializer dataSourceInitializer() {
+        ResourceDatabasePopulator resourceDatabasePopulator = new ResourceDatabasePopulator();
+        resourceDatabasePopulator.addScript(new ClassPathResource("/schema-h2.sql"));
+        resourceDatabasePopulator.addScript(new ClassPathResource("/dataset-h2.sql"));
+
+        DataSourceInitializer dataSourceInitializer = new DataSourceInitializer();
+        dataSourceInitializer.setDataSource(dataSource());
+        dataSourceInitializer.setDatabasePopulator(resourceDatabasePopulator);
+        return dataSourceInitializer;
     }
 }
